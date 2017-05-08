@@ -5,30 +5,31 @@
     <title>ぴゅーん</title>
     <meta charset='utf-8'/>
 </head>
-<body onload="setInterval('draw()',40)">
+<body onload="setInterval('draw()', 40)">
     <canvas id=canvas width=600px height=600px />
     <script type="text/javascript">
-        var d = document.getElementById('canvas');
-        var c = d.getContext('2d');
+        let d = document.getElementById('canvas');
+        let c = d.getContext('2d');
         
-        class Effects {
-            constructor(id){
+        class Effect {
+            constructor(id, text){
                 this.id = id;
-                this.rad = Math.random() * Math.PI * 2;
-                this.r = Math.random() * (d.offsetWidth/2);
-                this.text = "☆";
-                this.color = getRandomColor();
+                this.text = text;
+                this.color = "black";
+                this.rad = 0;
+                this.r = 0;
             }
         }
-        var effects = [];
-        var num = 150;
-        for(var i = 0;i<num;i++){
-            effects.push(new Effects(i));
-        }
 
-        function getRandomColor() {
-            return "#" + getRandom(255).toString(16) + getRandom(255).toString(16) + getRandom(255).toString(16);
+        let effects = [];
+        const num = 150;
+        for(let i = 0; i<num; i++){
+            effects[i] = new Effect(i, "☆");
+            effects[i].color = "#" + getRandom(255).toString(16) + getRandom(255).toString(16) + getRandom(255).toString(16);
+            effects[i].rad = Math.random() * Math.PI * 2;
+            effects[i].r = Math.random() * (d.offsetWidth / 2);
         }
+        console.log(effects);
 
         function getRandom(max) {
             return Math.floor(Math.random() * (max + 1));
@@ -38,14 +39,15 @@
             c.beginPath();
             c.fillStyle= 'white';
             c.fillRect(0, 0, d.offsetWidth, d.offsetHeight);
-            var offset = d.offsetWidth / 2;
-            var interval = 800; // ms
-            for(var i in effects) {
+            let offset = d.offsetWidth / 2;
+            let speed = 10; // [px/f]
+            for(let i in effects) {
                 c.strokeStyle = effects[i].color;
-                var date = new Date();
-                var r = (effects[i].r + (offset * (date.getMilliseconds() % interval / interval))) % offset;
-                var x = Math.sin(effects[i].rad) * r + offset;
-                var y = Math.cos(effects[i].rad) * r + offset;
+                effects[i].r += speed;
+                if(effects[i].r > offset) effects[i].r = 0;
+                let r = effects[i].r;
+                let x = Math.sin(effects[i].rad) * r + offset;
+                let y = Math.cos(effects[i].rad) * r + offset;
                 c.strokeText(effects[i].text, x, y);
             }
         }
