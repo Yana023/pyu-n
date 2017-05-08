@@ -45,9 +45,8 @@
                 c.strokeStyle = effects[i].color;
                 effects[i].r += speed;
                 if(effects[i].r > offset) effects[i].r = 0;
-                let r = effects[i].r;
-                let x = Math.sin(effects[i].rad) * r + offset;
-                let y = Math.cos(effects[i].rad) * r + offset;
+                let x = Math.sin(effects[i].rad) * effects[i].r + offset;
+                let y = Math.cos(effects[i].rad) * effects[i].r + offset;
                 c.strokeText(effects[i].text, x, y);
             }
         }
