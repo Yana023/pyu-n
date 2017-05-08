@@ -1,0 +1,54 @@
+<! DOCTYPE html>
+
+<html>
+<head>
+    <title>ぴゅーん</title>
+    <meta charset='utf-8'/>
+</head>
+<body onload="setInterval('draw()',40)">
+    <canvas id=canvas width=600px height=600px />
+    <script type="text/javascript">
+        var d = document.getElementById('canvas');
+        var c = d.getContext('2d');
+        
+        class Effects {
+            constructor(id){
+                this.id = id;
+                this.rad = Math.random() * Math.PI * 2;
+                this.r = Math.random() * (d.offsetWidth/2);
+                this.text = "☆";
+                this.color = getRandomColor();
+            }
+        }
+        var effects = [];
+        var num = 150;
+        for(var i = 0;i<num;i++){
+            effects.push(new Effects(i));
+        }
+
+        function getRandomColor() {
+            return "#" + getRandom(255).toString(16) + getRandom(255).toString(16) + getRandom(255).toString(16);
+        }
+
+        function getRandom(max) {
+            return Math.floor(Math.random() * (max + 1));
+        }
+
+        function draw() {
+            c.beginPath();
+            c.fillStyle= 'white';
+            c.fillRect(0, 0, d.offsetWidth, d.offsetHeight);
+            var offset = d.offsetWidth / 2;
+            var interval = 800; // ms
+            for(var i in effects) {
+                c.strokeStyle = effects[i].color;
+                var date = new Date();
+                var r = (effects[i].r + (offset * (date.getMilliseconds() % interval / interval))) % offset;
+                var x = Math.sin(effects[i].rad) * r + offset;
+                var y = Math.cos(effects[i].rad) * r + offset;
+                c.strokeText(effects[i].text, x, y);
+            }
+        }
+    </script>
+</body>
+</html>
